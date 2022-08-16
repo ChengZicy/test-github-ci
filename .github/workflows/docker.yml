@@ -14,6 +14,7 @@ env:
   REGISTRY: ghcr.io
   # github.repository as <account>/<repo>
   IMAGE_NAME: ${{ github.repository }}
+  BRANCH: ${GITHUB_REF##*/}
 
 jobs:
   build:
@@ -25,9 +26,23 @@ jobs:
     steps:
       - name: Log Branch Name
         run: | 
-          echo ${GITHUB_REF##*/}
+          echo running on branch ${GITHUB_REF##*/}
       - name: Checkout repository
         uses: actions/checkout@v2
+
+      - name: Cache node modules
+          id: cache-npm
+          uses: actions/cache@v3
+          env:
+            cache-name: cache-node-modules
+          with:
+            # npm cache files are stored in `~/.npm` on Linux/macOS
+            path: ~/node_modules
+            key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+            restore-keys: |
+              ${{ runner.os }}-build-${{ env.cache-name }}-
+              ${{ runner.os }}-build-
+              ${{ runner.os }}-
 
       # Login against a Docker registry except on PR
       # https://github.com/docker/login-action
@@ -57,7 +72,7 @@ jobs:
         with:
           context: ./
           build-args: |
-            BUILD_ENV=prod
+            BUILD_ENV=${{ env.BRANCH == 'master' && 'prod' || 'dev' }}
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta_ui.outputs.tags }}
           labels: ${{ steps.meta_ui.outputs.labels }}
