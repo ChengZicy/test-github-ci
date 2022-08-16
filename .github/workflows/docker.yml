@@ -26,6 +26,7 @@ jobs:
       - name: Log Branch Name
         run: | 
           echo running on branch ${GITHUB_REF##*/}
+          echo "BRANCH=${GITHUB_REF##*/}" >> $GITHUB_ENV
       - name: Checkout repository
         uses: actions/checkout@v2
 
