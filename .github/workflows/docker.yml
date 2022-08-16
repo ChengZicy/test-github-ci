@@ -67,7 +67,7 @@ jobs:
 
       - name: Record Image Tags and Labels
         run: |
-          echo "image_tags=${{ steps.meta_ui.outputs.tags }}" >> 'image_tags'
+          echo "${{ steps.meta_ui.outputs.tags }}" >> 'image_tags'
 
       - uses: actions/upload-artifact@v3
         with:
