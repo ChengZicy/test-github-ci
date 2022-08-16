@@ -8,14 +8,10 @@ name: Docker
 on:
   workflow_dispatch:
   push:
-    branches: [ master, develop, ci-cd-configs ]
-    # Publish semver tags as releases.
-    tags: [ "v*.*.*" ]
 
 env:
   # Use docker.io for Docker Hub if empty
-#  REGISTRY: ghcr.io
-  REGISTRY: jdgjxxchy
+  REGISTRY: ghcr.io
   # github.repository as <account>/<repo>
   IMAGE_NAME: ${{ github.repository }}
 
@@ -46,7 +42,7 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
-            type=sha
+            type=sha,format=long
             type=ref,event=branch
             type=ref,event=pr
             type=semver,pattern=v{{version}}
@@ -56,6 +52,8 @@ jobs:
         uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
         with:
           context: ./
+          build-args:
+            BUILD_ENV: prod
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta_ui.outputs.tags }}
           labels: ${{ steps.meta_ui.outputs.labels }}

@@ -1,4 +1,6 @@
 FROM node:16
+ARG BUILD_ENV=dev
+ENV APP_ENV=$BUILD_ENV
 RUN mkdir /app
 WORKDIR /app
 COPY . .
