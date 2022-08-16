@@ -95,7 +95,6 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: image_tags
-          path: ./image_tags
 
       - name: Log Deploy
         run: |
