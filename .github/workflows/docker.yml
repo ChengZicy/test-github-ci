@@ -82,4 +82,6 @@ jobs:
         run: |
           echo Deploying
           echo ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          echo ${{ steps.meta_ui.outputs.tags }}
+          echo ${{ steps.meta_ui.outputs.labels }}
         
