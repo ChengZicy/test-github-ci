@@ -79,4 +79,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Log Deploy
-        run: echo Deploying
+        run: |
+          echo Deploying
+          echo ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+        
