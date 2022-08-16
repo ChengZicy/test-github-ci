@@ -1,10 +1,5 @@
 name: Docker
 
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
-
 on:
   workflow_dispatch:
   push:
@@ -15,18 +10,19 @@ env:
   # github.repository as <account>/<repo>
   IMAGE_NAME: ${{ github.repository }}
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
+permissions:
+  contents: read
+  packages: write
 
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
     steps:
       - name: Log Branch Name
         run: | 
           echo running on branch ${GITHUB_REF##*/}
           echo "branch=${GITHUB_REF#refs/heads/}" >> $GITHUB_ENV
+
       - name: Checkout repository
         uses: actions/checkout@v2
 
@@ -40,9 +36,9 @@ jobs:
           key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-build-${{ env.cache-name }}-
-            ${{ runner.os }}-build-
-            ${{ runner.os }}-
-
+  build:
+    runs-on: ubuntu-latest
+    steps:
       - name: Install dependencies
         run: yarn install
 
@@ -77,8 +73,11 @@ jobs:
         uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
         with:
           context: ./
-          build-args: |
-            BUILD_ENV=${{ env.BRANCH == 'master' && 'prod' || 'dev' }}
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta_ui.outputs.tags }}
           labels: ${{ steps.meta_ui.outputs.labels }}
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Log Deploy
+        runs: echo Deploying
