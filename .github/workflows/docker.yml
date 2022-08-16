@@ -25,7 +25,7 @@ jobs:
     steps:
       - name: Log Branch Name
         run: | 
-          echo $GITHUB_REF
+          echo ${GITHUB_REF##*/}
       - name: Checkout repository
         uses: actions/checkout@v2
 
