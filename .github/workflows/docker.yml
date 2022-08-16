@@ -17,6 +17,8 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+    outputs:
+      tags: ${{ steps.meta_ui.outputs.tags }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -65,14 +67,14 @@ jobs:
 #            type=ref,event=branch
 #            type=ref,event=pr
 
-      - name: Record Image Tags and Labels
-        run: |
-          echo "${{ steps.meta_ui.outputs.tags }}" >> 'image_tags'
-
-      - uses: actions/upload-artifact@v3
-        with:
-          name: image_tags
-          path: ./image_tags
+#      - name: Record Image Tags and Labels
+#        run: |
+#          echo "${{ steps.meta_ui.outputs.tags }}" >> 'image_tags'
+#
+#      - uses: actions/upload-artifact@v3
+#        with:
+#          name: image_tags
+#          path: ./image_tags
 
       # Build and push Docker image with Buildx (don't push on PR)
       # https://github.com/docker/build-push-action
@@ -88,18 +90,16 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
-      - name: Get Image Tags
-        uses: actions/download-artifact@v3
-        with:
-          name: image_tags
+#      - name: Checkout repository
+#        uses: actions/checkout@v2
+#
+#      - name: Get Image Tags
+#        uses: actions/download-artifact@v3
+#        with:
+#          name: image_tags
 
       - name: Log Deploy
         run: |
           echo Deploying
-          echo ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-          echo ${{ env.image_tags }}
-          cat image_tags
+          echo ${{ needs.build.outputs.tags }}
         
