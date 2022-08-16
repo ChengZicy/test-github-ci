@@ -26,7 +26,7 @@ jobs:
       - name: Log Branch Name
         run: | 
           echo running on branch ${GITHUB_REF##*/}
-          echo "BRANCH=${GITHUB_REF##*/}" >> $GITHUB_ENV
+          echo "git_branch=${GITHUB_REF#refs/heads/}" >> $GITHUB_BRANCH
       - name: Checkout repository
         uses: actions/checkout@v2
 
@@ -48,7 +48,7 @@ jobs:
 
       - name: Build
         env:
-          APP_ENV: ${{ ${GITHUB_REF##*/} == 'master' && 'prod' || 'dev' }}
+          APP_ENV: ${{ env.git_branch == 'master' && 'prod' || 'dev' }}
         run: yarn build
 
       # Login against a Docker registry except on PR
