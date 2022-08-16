@@ -81,7 +81,7 @@ jobs:
         with:
           context: ./
           push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ steps.meta_ui.outputs.image_tags }}
+          tags: ${{ steps.meta_ui.outputs.tags }}
           labels: ${{ steps.meta_ui.outputs.image_labels }}
 
   deploy:
