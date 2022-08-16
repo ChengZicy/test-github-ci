@@ -80,4 +80,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Log Deploy
-        runs: echo Deploying
+        run: echo Deploying
