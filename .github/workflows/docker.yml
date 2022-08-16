@@ -37,6 +37,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-build-${{ env.cache-name }}-
   build:
+    needs: prepare
     runs-on: ubuntu-latest
     steps:
       - name: Install dependencies
@@ -77,6 +78,7 @@ jobs:
           tags: ${{ steps.meta_ui.outputs.tags }}
           labels: ${{ steps.meta_ui.outputs.labels }}
   deploy:
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - name: Log Deploy
