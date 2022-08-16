@@ -14,7 +14,6 @@ env:
   REGISTRY: ghcr.io
   # github.repository as <account>/<repo>
   IMAGE_NAME: ${{ github.repository }}
-  BRANCH: ${{ GITHUB_REF##*/ }}
 
 jobs:
   build:
@@ -26,7 +25,7 @@ jobs:
     steps:
       - name: Log Branch Name
         run: | 
-          echo running on branch ${{ env.BRANCH }}
+          echo running on branch ${GITHUB_REF##*/}
       - name: Checkout repository
         uses: actions/checkout@v2
 
@@ -48,7 +47,7 @@ jobs:
 
       - name: Build
         env:
-          APP_ENV: ${{ env.BRANCH == 'master' && 'prod' || 'dev' }}
+          APP_ENV: ${{ ${GITHUB_REF##*/} == 'master' && 'prod' || 'dev' }}
         run: yarn build
 
       # Login against a Docker registry except on PR
