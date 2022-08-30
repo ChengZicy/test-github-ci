@@ -15,12 +15,27 @@ on:
 
 jobs:
   dev_build:
-    if: github.ref == 'refs/heads/release'
+    if: github.ref == 'refs/heads/develop'
     runs-on: ubuntu-latest
+    env:
+      ENV_NAME: dev
     steps:
       - name: Build in dev
-        env:
-          DEV_ENV_NAME: dev
         run:
-          echo ${DEV_ENV_NAME}
-
+          echo ${ENV_NAME}
+  master_build:
+    if: github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    env:
+      ENV_NAME: prod
+    steps:
+      - name: Build in prod
+        run:
+          echo ${ENV_NAME}
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Build in prod
+        run:
+          echo github.ref
+          echo github.ref_name
