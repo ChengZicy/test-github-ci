@@ -12,12 +12,9 @@ on:
     # Publish semver tags as releases.
     tags: [ "v*.*.*" ]
 
-env:
-
 
 jobs:
   dev_build:
-    if:
     runs-on: ubuntu-latest
     steps:
       - name: Build in dev
