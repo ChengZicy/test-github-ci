@@ -15,6 +15,7 @@ on:
 
 jobs:
   dev_build:
+    if: github.ref == 'refs/heads/release'
     runs-on: ubuntu-latest
     steps:
       - name: Build in dev
@@ -22,11 +23,4 @@ jobs:
           DEV_ENV_NAME: dev
         run:
           echo ${DEV_ENV_NAME}
-
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo ${{ contains( fromJson(${GITHUB_REF#refs/heads/}), 'release' ) }}
-
-      - run: echo ${GITHUB_REF#refs/heads/}
 
