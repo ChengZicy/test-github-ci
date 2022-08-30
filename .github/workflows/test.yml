@@ -1,17 +1,11 @@
 name: Docker
 
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
-
 on:
   workflow_dispatch:
   push:
-    branches: [ develop, ci-cd-configs, release ]
+    branches: [ develop, release ]
     # Publish semver tags as releases.
     tags: [ "v*.*.*" ]
-
 
 jobs:
   dev_build:
@@ -24,7 +18,7 @@ jobs:
         run:
           echo ${ENV_NAME}
   release_build:
-    if: github.ref == 'refs/heads/master'
+    if: github.ref == 'refs/heads/release'
     runs-on: ubuntu-latest
     env:
       ENV_NAME: prod
@@ -33,6 +27,7 @@ jobs:
         run:
           echo ${ENV_NAME}
   test:
+    if: github.ref == 'refs/heads/release'
     runs-on: ubuntu-latest
     steps:
       - name: Build in prod
@@ -40,4 +35,5 @@ jobs:
           echo ${{github.ref}}
           echo ${{github.ref_name}}
           echo ${{github.base_ref}}
+          echo ${{github.event_name}}
           echo 123
