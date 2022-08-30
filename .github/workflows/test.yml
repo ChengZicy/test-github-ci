@@ -1,0 +1,31 @@
+name: Docker
+
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ master, develop, ci-cd-configs ]
+    # Publish semver tags as releases.
+    tags: [ "v*.*.*" ]
+
+env:
+  # Use docker.io for Docker Hub if empty
+  REGISTRY: ghcr.io
+  # github.repository as <account>/<repo>
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  dev_build:
+    if: contains( ${GITHUB_REF#refs/heads/}, 'develop' )
+    runs-on: ubuntu-latest
+    steps:
+      - name: Build in dev
+        env:
+          DEV_ENV_NAME: dev
+        run:
+          echo DEV_ENV_NAME
+
