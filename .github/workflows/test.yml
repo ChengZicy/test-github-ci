@@ -26,5 +26,7 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - run: | 
-        echo ${{ contains( '${GITHUB_REF#refs/heads/}', 'release' ) }}
+      - run: echo ${{ contains( '${GITHUB_REF#refs/heads/}', 'release' ) }}
+
+      - run: echo ${GITHUB_REF#refs/heads/}
+
