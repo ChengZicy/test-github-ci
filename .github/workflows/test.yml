@@ -27,7 +27,6 @@ jobs:
         run:
           echo ${ENV_NAME}
   test:
-    if: github.ref == 'refs/heads/release'
     runs-on: ubuntu-latest
     steps:
       - name: Build in prod
