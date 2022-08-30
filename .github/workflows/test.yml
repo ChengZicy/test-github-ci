@@ -20,7 +20,7 @@ env:
 
 jobs:
   dev_build:
-    if: contains( '${GITHUB_REF#refs/heads/}', 'release' )
+    if: contains( ${GITHUB_REF#refs/heads/}, 'release' )
     runs-on: ubuntu-latest
     steps:
       - name: Build in dev
