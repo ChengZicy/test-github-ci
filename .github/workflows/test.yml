@@ -29,3 +29,7 @@ jobs:
         run:
           echo DEV_ENV_NAME
 
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo ${GITHUB_REF#refs/heads/}
