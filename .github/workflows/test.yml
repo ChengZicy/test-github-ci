@@ -36,6 +36,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Build in prod
-        run:
+        run: |
           echo '${github.ref}'
           echo '${github.ref_name}'
+          echo 123
