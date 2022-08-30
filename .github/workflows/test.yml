@@ -8,7 +8,7 @@ name: Docker
 on:
   workflow_dispatch:
   push:
-    branches: [ master, develop, ci-cd-configs ]
+    branches: [ master, develop, ci-cd-configs, release ]
     # Publish semver tags as releases.
     tags: [ "v*.*.*" ]
 
@@ -20,7 +20,7 @@ env:
 
 jobs:
   dev_build:
-    if: contains( '${GITHUB_REF#refs/heads/}', 'develop' )
+    if: contains( '${GITHUB_REF#refs/heads/}', 'release' )
     runs-on: ubuntu-latest
     steps:
       - name: Build in dev
