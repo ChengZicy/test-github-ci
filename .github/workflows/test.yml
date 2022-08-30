@@ -28,3 +28,4 @@ jobs:
     steps:
       - run: | 
         echo ${GITHUB_REF#refs/heads/}
+        echo ${{ contains( '${GITHUB_REF#refs/heads/}', 'release' ) }}
