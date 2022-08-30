@@ -13,14 +13,11 @@ on:
     tags: [ "v*.*.*" ]
 
 env:
-  # Use docker.io for Docker Hub if empty
-  REGISTRY: ghcr.io
-  # github.repository as <account>/<repo>
-  IMAGE_NAME: ${{ github.repository }}
+
 
 jobs:
   dev_build:
-    if: contains( ${GITHUB_REF#refs/heads/}, 'release' )
+    if:
     runs-on: ubuntu-latest
     steps:
       - name: Build in dev
@@ -32,4 +29,6 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - run: echo ${GITHUB_REF#refs/heads/}
+      - run: | 
+        echo ${GITHUB_REF#refs/heads/}
+        echo ${{ contains( '${GITHUB_REF#refs/heads/}', 'release' ) }}
