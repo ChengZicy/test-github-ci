@@ -37,5 +37,5 @@ jobs:
     steps:
       - name: Build in prod
         run:
-          echo ${github.ref}
-          echo ${github.ref_name}
+          echo '${github.ref}'
+          echo '${github.ref_name}'
