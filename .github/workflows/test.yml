@@ -23,7 +23,7 @@ jobs:
       - name: Build in dev
         run:
           echo ${ENV_NAME}
-  master_build:
+  release_build:
     if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     env:
@@ -39,4 +39,5 @@ jobs:
         run: |
           echo ${{github.ref}}
           echo ${{github.ref_name}}
+          echo ${{github.base_ref}}
           echo 123
