@@ -27,6 +27,7 @@ jobs:
         run:
           echo ${ENV_NAME}
   test:
+    if: contains( github.ref,'refs/tags')
     runs-on: ubuntu-latest
     steps:
       - name: Build in prod
@@ -34,5 +35,5 @@ jobs:
           echo ${{github.ref}}
           echo ${{github.ref_name}}
           echo ${{github.base_ref}}
-          echo ${{github.event_name}}
+          echo ${{github.base_ref}}
           echo 123
