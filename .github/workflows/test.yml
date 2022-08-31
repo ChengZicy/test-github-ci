@@ -17,6 +17,7 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
+
       - name: Build in dev
         run:
           echo ${ENV_NAME}
