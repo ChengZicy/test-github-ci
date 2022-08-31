@@ -24,7 +24,7 @@ jobs:
       ENV_NAME: prod
     steps:
       - name: Build in prod
-        run:
+        run: |
           echo ${ENV_NAME}
           echo ${{github.repo}}
   prod:
