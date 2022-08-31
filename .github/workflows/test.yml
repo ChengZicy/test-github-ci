@@ -9,6 +9,7 @@ on:
 
 env:
   MODE: ${{ github.ref == 'refs/heads/develop' && 'test' || github.ref == 'refs/heads/release' && 'staging' || contains( github.ref,'refs/tags') && 'prod' }}
+  REGISTRY: ghcr.io
 
 jobs:
   build:
@@ -29,7 +30,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
         with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          images: ${{ env.REGISTRY }}/${{ github.repository }}
           tags: ${{env.MODE}} == 'prod' && 'type=semver,pattern={{version}}' || 'type=sha,suffix=-test'
 
 
