@@ -26,6 +26,7 @@ jobs:
       - name: Build in prod
         run:
           echo ${ENV_NAME}
+          echo ${{github.repo}}
   prod:
     if: contains( github.ref,'refs/tags')
     runs-on: ubuntu-latest
@@ -37,10 +38,3 @@ jobs:
           echo ${{github.base_ref}}
           echo ${{github.base_ref}}
           echo 123
-  sync:
-    needs: [dev, release, prod]
-    runs-on: ubuntu-latest
-    steps:
-      - name: sync argocd
-        run: |
-          echo ${{github.repo}}
