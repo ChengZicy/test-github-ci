@@ -4,7 +4,6 @@ on:
   workflow_dispatch:
   push:
     branches: [ develop, release ]
-    # Publish semver tags as releases.
     tags: [ "v*.*.*" ]
 
 env:
@@ -34,7 +33,8 @@ jobs:
         uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
         with:
           images: ${{ env.REGISTRY }}/${{ github.repository }}
-          tags: ${{env.MODE}} == 'prod' && 'type=semver,pattern={{version}}' || 'type=sha,suffix=-test'
+          tags: |
+            ${{ env.MODE == 'prod' && 'type=semver,pattern={{version}}' || join(['type=sha,suffix=-',env.MODE],'') }}
 
 
       - name: Build and push Docker image for UI
@@ -51,7 +51,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           version: 2.4.7
-          command: app set ${{ github.event.repository.name }}-${MODE}
+          command: app set ${{ github.event.repository.name }}-${{env.MODE}}
           options: |
             --server argocd.destill.io
             --kustomize-image ${{ steps.meta.outputs.tags }}
