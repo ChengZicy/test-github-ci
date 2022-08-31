@@ -36,17 +36,10 @@ jobs:
           tags: |
             ${{ env.MODE == 'prod' && 'type=semver,pattern=v{{version}}' || format('type=sha,suffix=-{0}',env.MODE) }}
 
-      - run: |
-          echo ${{ steps.meta.outputs.json }}
-          echo ${{ fromJSON(steps.meta.outputs.json).tags[0] }}
-        name: echo
-
-
       - name: Build and push Docker image for UI
         uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
         with:
           context: ./
-          push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.image_labels }}
 
