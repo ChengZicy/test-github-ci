@@ -26,7 +26,7 @@ jobs:
       - name: Build in prod
         run: |
           echo ${ENV_NAME}
-          echo ${{github.repo}}
+          echo ${{github.repository}}
   prod:
     if: contains( github.ref,'refs/tags')
     runs-on: ubuntu-latest
