@@ -34,7 +34,7 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ github.repository }}
           tags: |
-            ${{ env.MODE == 'prod' && 'type=semver,pattern={{version}}' || join(['type=sha,suffix=-',env.MODE],'') }}
+            ${{ env.MODE == 'prod' && 'type=semver,pattern={{version}}' || format('type=sha,suffix=-{0}',env.MODE) }}
 
 
       - name: Build and push Docker image for UI
