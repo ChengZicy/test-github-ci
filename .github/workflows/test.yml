@@ -17,6 +17,41 @@ jobs:
       - name: Build in dev
         run:
           echo ${ENV_NAME}
+
+      - name: Log into registry ${{ env.REGISTRY }}
+        uses: docker/login-action@28218f9b04b4f3f62068d7b6ce6ca5b26e35336c
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract Docker metadata for UI
+        id: meta
+        uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=sha,suffix=-test
+
+      - name: Build and push Docker image for UI
+        uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
+        with:
+          context: ./
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.meta_ui.outputs.tags }}
+          labels: ${{ steps.meta_ui.outputs.image_labels }}
+
+      - name: Update ArgoCD Image
+        uses: clowdhaus/argo-cd-action/@main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          version: 2.4.7
+          command: app set ${{ github.event.repository.name }}-test
+          options: |
+            --server argocd.destill.io
+            --kustomize-image ${{ steps.meta.outputs.tags}}
+            --auth-token ${{ secrets.ARGOCD_TOKEN }}
   release:
     if: github.ref == 'refs/heads/release'
     runs-on: ubuntu-latest
@@ -27,6 +62,41 @@ jobs:
         run: |
           echo ${ENV_NAME}
           echo ${{github.event.repository.name}}
+      - name: Log into registry ${{ env.REGISTRY }}
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@28218f9b04b4f3f62068d7b6ce6ca5b26e35336c
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract Docker metadata for UI
+        id: meta
+        uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=sha,suffix=-staging
+
+      - name: Build and push Docker image for UI
+        uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
+        with:
+          context: ./
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.meta_ui.outputs.tags }}
+          labels: ${{ steps.meta_ui.outputs.image_labels }}
+
+      - name: Update ArgoCD Image
+        uses: clowdhaus/argo-cd-action/@main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          version: 2.4.7
+          command: app set ${{ github.event.repository.name }}-staging
+          options: |
+            --server argocd.destill.io
+            --kustomize-image ${{ steps.meta.outputs.tags}}
+            --auth-token ${{ secrets.ARGOCD_TOKEN }}
   prod:
     if: contains( github.ref,'refs/tags')
     runs-on: ubuntu-latest
@@ -35,6 +105,38 @@ jobs:
         run: |
           echo ${{github.ref}}
           echo ${{github.ref_name}}
-          echo ${{github.base_ref}}
-          echo ${{github.base_ref}}
-          echo 123
+      - name: Log into registry ${{ env.REGISTRY }}
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@28218f9b04b4f3f62068d7b6ce6ca5b26e35336c
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract Docker metadata for UI
+        id: meta
+        uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=semver,pattern={{version}}
+
+      - name: Build and push Docker image for UI
+        uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
+        with:
+          context: ./
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.meta_ui.outputs.tags }}
+          labels: ${{ steps.meta_ui.outputs.image_labels }}
+
+      - name: Update ArgoCD Image
+        uses: clowdhaus/argo-cd-action/@main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          version: 2.4.7
+          command: app set ${{ github.event.repository.name }}
+          options: |
+            --server argocd.destill.io
+            --kustomize-image ${{ steps.meta.outputs.tags}}
+            --auth-token ${{ secrets.ARGOCD_TOKEN }}
