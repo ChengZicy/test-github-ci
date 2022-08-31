@@ -38,7 +38,8 @@ jobs:
 
       - run: |
           echo ${{ steps.meta.outputs.json }}
-          echo ${{ fromJSON(steps.meta.outputs.json.tags) }}
+          echo ${{ fromJSON(steps.meta.outputs.json) }}
+        name: echo
 
 
 #      - name: Build and push Docker image for UI
