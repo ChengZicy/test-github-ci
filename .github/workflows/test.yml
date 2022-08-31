@@ -8,7 +8,7 @@ on:
     tags: [ "v*.*.*" ]
 
 env:
-  MODE: ${{ github.ref == 'refs/heads/develop' && "test" || github.ref == 'refs/heads/release' && "staging" || contains( github.ref,'refs/tags') && "prod" }}
+  MODE: ${{ github.ref == 'refs/heads/develop' && 'test' || github.ref == 'refs/heads/release' && 'staging' || contains( github.ref,'refs/tags') && 'prod' }}
 
 jobs:
   build:
