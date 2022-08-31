@@ -8,7 +8,7 @@ on:
     tags: [ "v*.*.*" ]
 
 jobs:
-  dev_build:
+  dev:
     if: github.ref == 'refs/heads/develop'
     runs-on: ubuntu-latest
     env:
@@ -17,7 +17,7 @@ jobs:
       - name: Build in dev
         run:
           echo ${ENV_NAME}
-  release_build:
+  release:
     if: github.ref == 'refs/heads/release'
     runs-on: ubuntu-latest
     env:
@@ -26,7 +26,7 @@ jobs:
       - name: Build in prod
         run:
           echo ${ENV_NAME}
-  test:
+  prod:
     if: contains( github.ref,'refs/tags')
     runs-on: ubuntu-latest
     steps:
@@ -37,3 +37,10 @@ jobs:
           echo ${{github.base_ref}}
           echo ${{github.base_ref}}
           echo 123
+  sync:
+    needs: [dev, release, prod]
+    runs-on: ubuntu-latest
+    steps:
+      - name: sync argocd
+        run: |
+          echo ${{github.repo}}
