@@ -38,7 +38,7 @@ jobs:
 
       - run: |
           echo ${{ steps.meta.outputs.json }}
-          echo ${{ fromJSON(steps.meta.outputs.json).tags.0 }}
+          echo ${{ fromJSON(steps.meta.outputs.json).tags }}
         name: echo
 
 
